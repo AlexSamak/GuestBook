@@ -20,24 +20,25 @@
 
         <el-main>
 
-          <template v-for="item in users">
+          <template v-for="item in comments">
 
-            <el-row :gutter="10">
-              <el-col :span="12">
-                <div class="grid-content bg-purple">
-                  <p>{{item.name}}</p>
-                  <p>{{item.age}}</p>
-                  <img src="./assets/vue.jpg">
-                </div>
-              </el-col>
-              <el-col :span="12">
-                <div class="grid-content bg-purple">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet doloribus sit, sunt aspernatur quibusdam. Aperiam illo eius omnis, ducimus qui maiores animi tempora, vel in, doloremque cum distinctio fugit, voluptatem esse dicta impedit id dolorem soluta cumque harum possimus natus commodi illum! Quae eveniet atque veritatis, dolorum consequatur labore eaque.</p>
-                </div>
-              </el-col>
-            </el-row>
+					<el-row :gutter="10">
+						<el-col :span="12">
+							<div class="grid-content bg-purple">
+								<p>{{item.timestamp}}</p>
+								<h3>{{item.name}}</h3>
+								<img src="./assets/vue.jpg">
+							
+							</div>
+						</el-col>
+						<el-col :span="12">
+							<div class="grid-content bg-purple">
+								<p>{{item.comment}}</p>
+							</div>
+						</el-col>
+					</el-row>
 
-          </template>
+				</template>
 
           <v-popup v-if="IsPopupVisible" @close-event="closeInfoPopup"> <p>Абра кадабра</p> </v-popup>
 
@@ -68,14 +69,7 @@
       return {
         //orders: [],
         IsPopupVisible: false,
-        users: [
-        {name:'Tom', age:22}, 
-        {name:'Bob', age:31},
-        {name:'John', age:28},
-        {name:'Geek', age:35},
-        {name:'Smith', age:31},
-        {name: 'Sam', age:28}
-        ]
+        comments: []
       }
     },
     methods: {
@@ -87,20 +81,19 @@
         this.IsPopupVisible = false;
       },
       fetchOrders() {
-        const vm = this;
-        axios.get('http://localhost:8000/api/orders')
+      	const vm = this;
+        axios.get('http://localhost:8000/api/gbooks/')
         .then((responce) => {
           const data = responce.data;
-          vm.orders = data
+          vm.comments = data
       })
      },
-    created: function() {
-    console.log('Created!');
-    //this.fetchOrders();
-    //this.addData();
-  }
-
-  }
+    
+  },
+  created: function() {
+		console.log('Created!');
+		this.fetchOrders();		
+	}
 
 
   }

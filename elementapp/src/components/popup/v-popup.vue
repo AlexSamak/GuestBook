@@ -13,22 +13,22 @@
       </el-form-item>
 
       <el-upload
-        class="upload-pict"
-        drag
-        action="https://jsonplaceholder.typicode.com/posts/"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :file-list="fileList"
-        multiple>
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">Перетащите файл или <em>нажмите для выбора</em></div>
-        <div class="el-upload__tip" slot="tip">jpg/png файл не более 500kb</div>
-      </el-upload>
+      class="upload-pict"
+      drag
+      action="https://jsonplaceholder.typicode.com/posts/"
+      :on-preview="handlePreview"
+      :on-remove="handleRemove"
+      :file-list="fileList"
+      multiple>
+      <i class="el-icon-upload"></i>
+      <div class="el-upload__text">Перетащите файл или <em>нажмите для выбора</em></div>
+      <div class="el-upload__tip" slot="tip">jpg/png файл не более 500kb</div>
+    </el-upload>
 
-      <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">Отправить</el-button>
-        <el-button @click="$emit('close-event')" >Закрыть</el-button>
-      </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="submitForm('ruleForm')">Отправить</el-button>
+      <el-button @click="$emit('close-event')" >Закрыть</el-button>
+    </el-form-item>
 
 
 
@@ -39,42 +39,68 @@
 </template>
 
 <script>
-  export default {
-    name: 'v-popup',
-    data() {
-      return {
-        ruleForm: {
-          name: '',
-          comment: ''
-        },
-        rules: {
-          name: [
-            { required: true, message: 'Пожалуйста, укажите свое Имя', trigger: 'blur' },
-            { min: 3, max: 32, message: 'Имя длиной от 3 до 32 символов', trigger: 'blur' }
-          ],
-          comment: [
-            { required: true, message: 'Пожалуйста, напишите свой Отзыв', trigger: 'blur' },
-            { min: 16, max: 512, message: 'Сообщение длиной от 16 до 512 символов', trigger: 'blur' }
-          ]
-        }
-      };
-    },
-    methods: {
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
+export default {
+  name: 'v-popup',
+  data() {
+    return {
+      ruleForm: {
+        name: '',
+        comment: ''
       },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
+      rules: {
+        name: [
+        { required: true, message: 'Пожалуйста, укажите свое Имя', trigger: 'blur' },
+        { min: 3, max: 32, message: 'Имя длиной от 3 до 32 символов', trigger: 'blur' }
+        ],
+        comment: [
+        { required: true, message: 'Пожалуйста, напишите свой Отзыв', trigger: 'blur' },
+        { min: 16, max: 512, message: 'Сообщение длиной от 16 до 512 символов', trigger: 'blur' }
+        ]
       }
+    };
+  },
+  methods: {
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          //alert('submit!');
+          //console.log(this.ruleForm.name);
+          //console.log(this.ruleForm.comment);
+
+
+          const URL = "http://localhost:8000/api/gbooks/";
+          var vAttributes = {};
+          vAttributes = {
+            name: this.ruleForm.name, 
+            comment: this.ruleForm.comment
+          };
+          const ops = {
+            method: 'post',
+            headers: { 'content-type': 'application/json' },
+            data: JSON.stringify(vAttributes) ,
+            url: URL
+          };
+          //console.log(ops.data);
+          axios( ops).then((res) => {
+            console.log("post response: " + res);
+          }).catch(function (error) {
+            console.log("post error: " + error);
+          });
+
+          this.$emit('close-event');
+
+
+    } else {
+      console.log('error submit!!');
+      return false;
+    }
+  });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
     }
   }
+}
 </script>
 
 <style lang="scss">
